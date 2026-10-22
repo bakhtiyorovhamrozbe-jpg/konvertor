@@ -1,3 +1,4 @@
+ndex · PHP
 <?php
 set_time_limit(300);
 ini_set('memory_limit', '512M');
@@ -133,6 +134,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fayl Konverteri</title>
+<meta name="theme-color" content="#2e9bd6">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%235bbcf0'/%3E%3Cstop offset='1' stop-color='%231f86bf'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Cg fill='none' stroke='%23fff' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M16 25h32M40 16l9 9-9 9'/%3E%3Cpath d='M48 42H16M24 33l-9 9 9 9'/%3E%3C/g%3E%3C/svg%3E">
 <style>
  :root {
    --bg: #dff1fc;
@@ -149,7 +152,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
  }
  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, Tahoma, sans-serif; }
  body { background: linear-gradient(160deg, #eaf7ff 0%, #cde8f9 100%) fixed; color: var(--text); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 24px 16px 14vh; }
- .card { background: var(--card); width: 100%; max-width: 440px; padding: 36px 32px; border-radius: 16px; border: 1px solid var(--line); box-shadow: 0 8px 30px rgba(46,155,214,.16); }
+ body::before { content: ""; position: fixed; width: 560px; height: 560px; border-radius: 50%; top: -180px; right: -140px; background: radial-gradient(circle, rgba(91,188,240,.40), transparent 70%); pointer-events: none; }
+ body::after { content: ""; position: fixed; width: 500px; height: 500px; border-radius: 50%; bottom: -200px; left: -160px; background: radial-gradient(circle, rgba(46,155,214,.28), transparent 70%); pointer-events: none; }
+ .logo { display: block; width: 64px; height: 64px; margin: 0 auto 16px; filter: drop-shadow(0 8px 14px rgba(46,155,214,.35)); }
+ .chips { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
+ .chip { font-size: 12px; color: var(--accent-dark); background: var(--accent-soft); padding: 5px 11px; border-radius: 999px; }
+ .drop svg { width: 40px; height: 40px; }
+ .card { position: relative; z-index: 1; background: var(--card); width: 100%; max-width: 460px; padding: 36px 32px; border-radius: 16px; border: 1px solid var(--line); box-shadow: 0 8px 30px rgba(46,155,214,.16); }
  h1 { font-size: 22px; font-weight: 700; text-align: center; }
  .sub { color: var(--muted); font-size: 14px; text-align: center; margin: 6px 0 26px; }
  
@@ -176,10 +185,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
 <div class="card">
+    <svg class="logo" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5bbcf0"/><stop offset="1" stop-color="#1f86bf"/></linearGradient></defs><rect width="64" height="64" rx="16" fill="url(#lg)"/><g fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 25h32M40 16l9 9-9 9"/><path d="M48 42H16M24 33l-9 9 9 9"/></g></svg>
     <h1>Fayl Konverteri</h1>
     <p class="sub">Istalgan fayl &rarr; PDF &nbsp;·&nbsp; PDF &rarr; Word</p>
  
-    <?php if ($error): ?><div class="err"><?= htmlspecialchars($error) ?></div><?php endif; ?>
+    <?php if ($error): ?><div class="err" id="err"><?= htmlspecialchars($error) ?></div><?php endif; ?>
  
     <form method="post" enctype="multipart/form-data" id="form">
         <input type="hidden" name="token" id="token">
@@ -190,7 +200,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
  
         <label class="drop" id="drop">
             <input type="file" name="f" id="file" required>
-            <div class="icon">⇪</div>
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 13v8"/><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="m8 17 4-4 4 4"/></svg></div>
             <div class="t1" id="t1">Faylni tanlang yoki shu yerga tashlang</div>
             <div class="t2" id="t2">Word, Excel, PowerPoint, rasm, PDF...</div>
         </label>
@@ -198,7 +208,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <button type="submit" id="btn">Konvertatsiya qilish</button>
     </form>
  
-    <div class="foot">PHP · LibreOffice · pdf2docx</div>
+    <div class="chips"><span class="chip">Bepul</span><span class="chip">Ro'yxatdan o'tish shart emas</span><span class="chip">Fayllar saqlanmaydi</span></div>
 </div>
  
 <script>
@@ -206,7 +216,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
      t1 = document.getElementById('t1'), t2 = document.getElementById('t2'),
      btn = document.getElementById('btn');
  
+ function hideErr() { var e = document.getElementById('err'); if (e) e.style.display = 'none'; }
+ 
  function show() {
+   hideErr();
    if (file.files.length) {
      var f = file.files[0], mb = f.size / 1048576;
      t1.textContent = f.name;
@@ -238,6 +251,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
  }
  
  document.getElementById('form').addEventListener('submit', function () {
+   hideErr();
    var tk = String(Date.now()); tokenEl.value = tk;
    btn.textContent = 'Kuting...';
    setTimeout(function () { btn.disabled = true; }, 0);
